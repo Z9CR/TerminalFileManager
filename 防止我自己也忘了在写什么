@@ -1,0 +1,7 @@
+现在实现了:
+    1.ls命令读取pwd下文件夹
+    2.存储文件/目录的结构体
+    3.makefile
+要做到:
+    1.TUI界面(draft.note)
+    2.界面内按下快捷键(space/enter)进入vim改配置

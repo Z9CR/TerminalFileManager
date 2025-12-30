@@ -1,0 +1,15 @@
+Interface:
+    +-------Path:$pwd
+    | type   name    date   
+    |[File] file1.f  
+    |[File] file2.b   
+    |[File] file3.c   
+    |[Dir ] dir1/     
+    |[Dir ] dir2/     
+    |[Dir ] dir3/     
+    |[App ] idea      
+    |[Prop] -.conf    
+    |[Shel] run.sh    
+
+    =type=    =name=    
+    6 char    dynamic
