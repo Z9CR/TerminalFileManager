@@ -11,5 +11,8 @@ commands.o : ./src/impl/commands.cpp
 FileSystem.o : ./src/impl/FileSystem.cpp
 	g++ -c ./src/impl/FileSystem.cpp
 
-.PHONY : clean : # clean .o File
+clean : # clean .o File
 	rm -rf *.o ./build/TerminalFileManager
+
+run : 
+	./build/TerminalFileManager
