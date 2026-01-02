@@ -1,18 +1,28 @@
 Interface:
-    Path:$pwd
-    | type   name    date   
-    |[File] file1.f  
-    |[File] file2.b   
-    |[File] file3.c   
-    |[Dir ] dir1/     
-    |[Dir ] dir2/     
-    |[Dir ] dir3/     
-    |[App ] idea      
-    |[Prop] -.conf    
-    |[Shel] run.sh    
-
-    =type=    =name=    
-    6 char    dynamic
+    Path:......
+    [*typ]  [*siz]   [*dat]        
+    [file]  xxxxxxB  yyyy.mm.dd
+    [file]  xxxxxxK  yyyy.mm.dd
+    [dir ]  xxxxxxM  yyyy.mm.dd
+    [dir ]  xxxxxxG  yyyy.mm.dd
+    [dir ]  xxxxxxT  yyyy.mm.dd
+    [dir ]  xxxxxxB  yyyy.mm.dd
+    [file]  xxxxxxB  yyyy.mm.dd
+    [file]  xxxxxxK  yyyy.mm.dd
+    [dir ]  xxxxxxM  yyyy.mm.dd
+    [dir ]  xxxxxxG  yyyy.mm.dd
+    [dir ]  xxxxxxT  yyyy.mm.dd
+    [dir ]  xxxxxxB  yyyy.mm.dd
+  
+在第13行打印选项
+*typ: \033[4;1;35mT\033[0m\033[1;35mype\033[0m 
+*nam: \033[4;1;35mN\033[0m\033[1;35mame\033[0m 
+*dat: \033[4;1;35mD\033[0m\033[1;35mate\033[0m
+*siz: \033[4;1;35mS\033[0m\033[1;35mzie\033[0m 
+[type] x
+[name] x
+[date] x
+[size] x
 
 现在实现了:
     1.ls命令读取pwd下文件夹
