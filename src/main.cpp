@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include "./head/config.h"
 #include "./head/thirdpartyLibs/tinydir.h"
 #include "./head/commands.h"
 using std::cin;
@@ -11,7 +12,9 @@ using std::endl;
 int chosen = 0;
 int main()
 {
+    config_init();
     set_raw_mode(true);
+    ///*
     while (true)
     {
         // 清空
@@ -36,16 +39,6 @@ int main()
             files.push_back(file);
             tinydir_next(&pwd);
         }
-        /*//调试输出, 展开+取消注释
-        cout << "共找到 " << files.size() << " 个文件：" << std::endl;
-        
-        for (const auto& file : files) {
-            cout << "路径: " << file.path
-                 << " 文件名: " << file.name
-                 << " 是目录: " << (file.is_dir ? "是" : "否")
-                 << std::endl;
-        }
-        *///关闭目录
         // 关闭dir释放资源
         tinydir_close(&pwd);
         // 打印文件列表
@@ -60,5 +53,6 @@ int main()
         else if (cmd == "DOWN" || cmd == "j" )
             chosen = chosen + 1 < files.size() ? chosen + 1 : files.size() - 1;
     }
+    //*/
     return 0;
 }
