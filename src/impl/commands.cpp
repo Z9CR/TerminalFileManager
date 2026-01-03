@@ -2,89 +2,115 @@
 #include "../head/thirdpartyLibs/tinydir.h"
 #include "../head/commands.h"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <string>
 #include <termios.h>
 #include <unistd.h>
 using std::cin;
 using std::cout;
-/*// 获取ls命令的返回值(无用)
-vector<string> getLS()
-{
-    vector<string> lines;
-    FILE *pipe = popen("ls -la", "r");
-    if (!pipe)
-    {
-        printf("[PANIC] unable to open");
-        exit(1);
-    }
-    char buf[4096];
-    while (fgets(buf, sizeof(buf), pipe) != nullptr)
-    {
-        string line = buf;
-        if (!line.empty() && line.back() == '\n')
-            line.pop_back(); // 去除endl
-        lines.push_back(line);
-    }
 
-    pclose(pipe); // release FILE*
-    return lines;
-} */
+// 补足前导0并转字符串
+string intToStringWithZero(int number, int width)
+{
+    std::ostringstream oss;
+    // setw(width) 设置宽度，setfill('0') 用 0 填充
+    oss << std::setw(width) << std::setfill('0') << number;
+    return oss.str();
+}
 // 打印文件列表并为chosen项(index 0)添加被选中样式
-void printFileList(const vector<tinydir_file>& files, int chosen) {
-    int left = chosen - 4 >= 0 ? chosen - 4 : 0;// 不可越左边界
-    int right = chosen + 5 <= files.size() - 1 ? chosen + 5 : files.size() - 1;// 不可越右边界
-    //上限显示10个
-    for(int i = left;i <= right;i++) {
+void printFileList(const vector<tinydir_file> &files, int chosen)
+{
+    int left = chosen - 4 >= 0 ? chosen - 4 : 0;                                // 不可越左边界
+    int right = chosen + 5 <= files.size() - 1 ? chosen + 5 : files.size() - 1; // 不可越右边界
+    // 上限显示10个
+    for (int i = left; i <= right; i++)
+    {
         tinydir_file file = files.at(i);
         string output = "";
         // type项
-        if(file.is_dir == 1) output += "[DIR ]";
-        else output += "[FILE]";
+        if (file.is_dir == 1)
+            output += "[DIR ]";
+        else
+            output += "[FILE]";
+        output += "  ";
+        // size
+        size_t size = file._s.st_size; // unit: Byte
+        if (size < 1024)
+            output += intToStringWithZero(size, 5) + 'B'; // [0, 1Kb)
+        else if (size < 1024 * 1024)
+            output += intToStringWithZero(size / 1024, 5) + 'K'; // [1Kb, 1Mb)
+        else if (size < 1024 * 1024 * 1024)
+            output += intToStringWithZero(size / 1024 / 1024, 5) + 'M'; // [1Mb, 1Gb)
+        else if (size < 1024 * 1024 * 1024 * 1024)
+            // [1Gb, 1Tb)
+            output += intToStringWithZero(size / 1024 / 1024 / 1024, 5) + 'G';
+        else // [1Tb, ?)
+            output += intToStringWithZero(size / 1024 / 1024 / 1024 / 1024, 5) + 'T';
+        output += "  ";
         // 最后为被选中项添加样式并换行
-        if (i == chosen) output = "\033[1;30;45m" + output + "\033[0m\n";
-        else output = output + "\n";
+        if (i == chosen)
+            output = "\033[1;30;45m" + output + "\033[0m\n";
+        else
+            output = output + "\n";
         cout << output;
     }
-} 
-/* 
+}
+/*
 获取用户输入，返回按键的字符串表示
- 返回值示例: 
+ 返回值示例:
  - 单字符: "a", "1", "\n", " "
  - 方向键: "UP", "DOWN", "LEFT", "RIGHT"
  - 功能键: "ESC", "BACKSPACE", "DELETE", "HOME", "END", "PAGEUP", "PAGEDOWN"
  - 其他: "UNKNOWN"
 */
-string getKeyInput() {
+string getKeyInput()
+{
     char first;
-    
+
     // 确保读取到字符
-    while (read(STDIN_FILENO, &first, 1) != 1) {
-        usleep(1000);  // 短暂等待
+    while (read(STDIN_FILENO, &first, 1) != 1)
+    {
+        usleep(1000); // 短暂等待
     }
-    
+
     // 普通字符
-    if (first != 27) {
-        if (first == '\n') return "ENTER";
-        if (first == ' ') return "SPACE";
-        if (first == 127) return "BACKSPACE";
-        if (first >= 32 && first <= 126) return std::string(1, first);
+    if (first != 27)
+    {
+        if (first == '\n')
+            return "ENTER";
+        if (first == ' ')
+            return "SPACE";
+        if (first == 127)
+            return "BACKSPACE";
+        if (first >= 32 && first <= 126)
+            return std::string(1, first);
         return "UNKNOWN";
     }
-    
+
     // 检查是否是方向键
     char seq[2];
     int n = read(STDIN_FILENO, seq, 2);
-    
-    if (n == 2 && seq[0] == '[') {
-        switch (seq[1]) {
-            case 'A': return "UP";
-            case 'B': return "DOWN";
-            case 'C': return "RIGHT";
-            case 'D': return "LEFT";
-            case 'H': return "HOME";
-            case 'F': return "END";
+
+    if (n == 2 && seq[0] == '[')
+    {
+        switch (seq[1])
+        {
+        case 'A':
+            return "UP";
+        case 'B':
+            return "DOWN";
+        case 'C':
+            return "RIGHT";
+        case 'D':
+            return "LEFT";
+        case 'H':
+            return "HOME";
+        case 'F':
+            return "END";
         }
     }
-    
+
     // 单独的 ESC 或其他 ESC 序列
     return "ESC";
 }
@@ -117,7 +143,7 @@ string getPWD()
     return result;
 }
 // 打印信息提示符
-void printInfoPrompt(const tinydir_dir& pwd)
+void printInfoPrompt(const tinydir_dir &pwd)
 {
     // 打印蓝底黑字路径
     cout << "\033[30;44mPath: " + string(pwd.path) + "\033[0m\n";

@@ -1,18 +1,18 @@
 Interface:
     Path:......
-    [*typ]  [*siz]   [*dat]        
-    [file]  xxxxxxB  yyyy.mm.dd
-    [file]  xxxxxxK  yyyy.mm.dd
-    [dir ]  xxxxxxM  yyyy.mm.dd
-    [dir ]  xxxxxxG  yyyy.mm.dd
-    [dir ]  xxxxxxT  yyyy.mm.dd
-    [dir ]  xxxxxxB  yyyy.mm.dd
-    [file]  xxxxxxB  yyyy.mm.dd
-    [file]  xxxxxxK  yyyy.mm.dd
-    [dir ]  xxxxxxM  yyyy.mm.dd
-    [dir ]  xxxxxxG  yyyy.mm.dd
-    [dir ]  xxxxxxT  yyyy.mm.dd
-    [dir ]  xxxxxxB  yyyy.mm.dd
+    [*typ]  [*siz]  [*dat]        
+    [file]  xxxxxB  yyyy.mm.dd
+    [file]  xxxxxK  yyyy.mm.dd
+    [dir ]  xxxxxM  yyyy.mm.dd
+    [dir ]  xxxxxG  yyyy.mm.dd
+    [dir ]  xxxxxT  yyyy.mm.dd
+    [dir ]  xxxxxB  yyyy.mm.dd
+    [file]  xxxxxB  yyyy.mm.dd
+    [file]  xxxxxK  yyyy.mm.dd
+    [dir ]  xxxxxM  yyyy.mm.dd
+    [dir ]  xxxxxG  yyyy.mm.dd
+    [dir ]  xxxxxT  yyyy.mm.dd
+    [dir ]  xxxxxB  yyyy.mm.dd
   
 在第13行打印选项
 *typ: \033[4;1;35mT\033[0m\033[1;35mype\033[0m 

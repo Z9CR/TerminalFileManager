@@ -5,8 +5,8 @@
 using std::string;
 using std::vector;
 
-// 获取ls命令的返回值 *弃用
-// vector<string> getLS();
+// 补足前导0并转字符串
+string intToStringWithZero(int number, int width);
 /* 
 获取用户输入，返回按键的字符串表示
  返回值示例: 
