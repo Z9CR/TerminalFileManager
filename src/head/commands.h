@@ -26,4 +26,6 @@ void printInfoPrompt(const tinydir_dir& pwd);
 void printFileList(const vector<tinydir_file>& files, int chosen);
 // 设置原始终端模式
 void set_raw_mode(bool enable);
+// spec to YYYY:MM:DD - hh:mm
+string timespecToYMDhm(const struct timespec& ts);
 #endif // COMMANDS_H

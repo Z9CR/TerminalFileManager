@@ -21,9 +21,9 @@ string intToStringWithZero(int number, int width)
 // 打印文件列表并为chosen项(index 0)添加被选中样式
 void printFileList(const vector<tinydir_file> &files, int chosen)
 {
-    int left = chosen - 4 >= 0 ? chosen - 4 : 0;                                // 不可越左边界
-    int right = chosen + 5 <= files.size() - 1 ? chosen + 5 : files.size() - 1; // 不可越右边界
-    // 上限显示10个
+    int left = chosen - 3 >= 0 ? chosen - 3 : 0;                                // 不可越左边界
+    int right = chosen + 3 <= files.size() - 1 ? chosen + 3 : files.size() - 1; // 不可越右边界
+    // 上限显示7个
     for (int i = left; i <= right; i++)
     {
         tinydir_file file = files.at(i);
@@ -34,7 +34,7 @@ void printFileList(const vector<tinydir_file> &files, int chosen)
         else
             output += "[FILE]";
         output += "  ";
-        // size
+        // size项目
         size_t size = file._s.st_size; // unit: Byte
         if (size < 1024)
             output += intToStringWithZero(size, 5) + 'B'; // [0, 1Kb)
@@ -48,6 +48,21 @@ void printFileList(const vector<tinydir_file> &files, int chosen)
         else // [1Tb, ?)
             output += intToStringWithZero(size / 1024 / 1024 / 1024 / 1024, 5) + 'T';
         output += "  ";
+        // ModiDate项
+        /*
+        时间戳	    stat 结构体成员	说明
+        访问时间.	st_atime	   最后访问时间（读、执行）
+        修改时间    st_mtime	   最后修改时间（内容修改）
+        状态变更时间 st_ctime	   最后状态改变时间（权限、所有者等）
+        */
+        timespec lastModifiedDateSPEC = file._s.st_mtim;
+        timespec lastVistitedDateSPEC = file._s.st_atim;
+        timespec lastChangedDateSPEC = file._s.st_ctim;
+        string modiDate = timespecToYMDhm(lastModifiedDateSPEC);
+        output += modiDate;
+        output += "  ";
+        // name项
+        output = output + file.name + (string(file.extension) == "." ? "/" : string(file.extension));
         // 最后为被选中项添加样式并换行
         if (i == chosen)
             output = "\033[1;30;45m" + output + "\033[0m\n";
@@ -150,9 +165,9 @@ void printInfoPrompt(const tinydir_dir &pwd)
     // 类型提示符
     cout << "[\033[4;1;35mT\033[0m\033[1;35mype\033[0m]" << "  ";
     // 类型 [Type] or [Dir ], 6chars
-    cout << "[\033[4;1;35mS\033[0m\033[1;35mize\033[0m]" << "   ";
+    cout << "[\033[4;1;35mS\033[0m\033[1;35mize\033[0m]" << "  ";
     // 大小 xxxxxxM, 7chars
-    cout << "[\033[4;1;35mD\033[0m\033[1;35mate\033[0m]" << "    ";
+    cout << "[\033[4;1;35mL\033[0m\033[1;35mastModifiedDate\033[0m]" << "  ";
     // 日期 yyyy:mm:dd, 10chars
     cout << "[\033[4;1;35mN\033[0m\033[1;35mame\033[0m]" << '\n';
     // 名称 asgsaghbasytgfuyhsygysda, unk chars
@@ -182,4 +197,20 @@ void clear()
 #else
     system("clear");
 #endif
+}
+// spec to YYYY:MM:DD - hh:mm
+string timespecToYMDhm(const struct timespec &ts)
+{
+    if (ts.tv_sec == 0)
+    {
+        return "????.??.?? - ??:??";
+    }
+
+    char buffer[64];
+    struct tm *tm_info = localtime(&ts.tv_sec);
+
+    // yyyy.mm.dd - HH:MM 格式
+    strftime(buffer, sizeof(buffer), "%Y.%m.%d - %H:%M", tm_info);
+
+    return string(buffer);
 }
