@@ -42,7 +42,7 @@ void printFileList(const vector<tinydir_file> &files, int chosen)
             output += intToStringWithZero(size / 1024, 5) + 'K'; // [1Kb, 1Mb)
         else if (size < 1024 * 1024 * 1024)
             output += intToStringWithZero(size / 1024 / 1024, 5) + 'M'; // [1Mb, 1Gb)
-        else if (size < 1024 * 1024 * 1024 * 1024)
+        else if ((u_int64_t)size < (u_int64_t)1024 * (u_int64_t)1024 * (u_int64_t)1024 * (u_int64_t)1024)
             // [1Gb, 1Tb)
             output += intToStringWithZero(size / 1024 / 1024 / 1024, 5) + 'G';
         else // [1Tb, ?)
@@ -62,7 +62,7 @@ void printFileList(const vector<tinydir_file> &files, int chosen)
         output += modiDate;
         output += "  ";
         // name项
-        output = output + file.name + (string(file.extension) == "." ? "/" : string(file.extension));
+        output = output + file.name ;//+ (string(file.extension) == "." ? "/" : string(file.extension));
         // 最后为被选中项添加样式并换行
         if (i == chosen)
             output = "\033[1;30;45m" + output + "\033[0m\n";
