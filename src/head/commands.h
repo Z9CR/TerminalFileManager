@@ -1,5 +1,7 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
+// the head file is used for screen works
+// 本库用于处理终端显示
 #include <string>
 #include <vector>
 using std::string;
