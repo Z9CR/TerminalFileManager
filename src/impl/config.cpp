@@ -21,8 +21,8 @@ void config_init()
         ofstream properties;
         properties.open(config_path);
         // 写入默认配置
-        properties << "aboveLines=3\n";
-        properties << "belowLines=3\n";
+        properties << "aboveLines=3" << std::endl;
+        properties << "belowLines=3" << std::endl;
         // 关闭+释放资源
         properties.close();
     }
