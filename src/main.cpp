@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include "./head/operations.h"
 #include "./head/config.h"
 #include "./head/thirdpartyLibs/tinydir.h"
 #include "./head/commands.h"
@@ -10,6 +11,7 @@ using std::string;
 using std::vector;
 using std::endl;
 int chosen = 0;
+int chosenBtn = 1;
 int main()
 {
     config_init();
@@ -44,7 +46,9 @@ int main()
         // 打印文件列表
         printFileList(files, chosen);
         // 打印命令提示
-        //开发中.................................................
+        
+        printCmdButton(chosenBtn);
+        cout << std::endl;
         // 读取命令
         string cmd = getKeyInput();
         // if line.....
@@ -52,6 +56,12 @@ int main()
             chosen = chosen - 1 >= 0 ? chosen - 1 : 0;
         else if (cmd == "DOWN" || cmd == "j" )
             chosen = chosen + 1 < files.size() ? chosen + 1 : files.size() - 1;
+        else if (cmd == "LEFT" || cmd == "h")
+            chosenBtn = chosenBtn - 1 >= 0 ? chosenBtn - 1 : 0;
+        else if (cmd == "RIGHT" || cmd == "l")
+            chosenBtn = chosenBtn + 1 < getAmountOfBtns() ? chosenBtn + 1 : getAmountOfBtns() - 1;
+        else if (cmd == "SPACE" || cmd == "ENTER")// 执行按钮
+            eval(chosenBtn);
     }
     //*/
     return 0;

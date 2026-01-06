@@ -22,8 +22,9 @@ string intToStringWithZero(int number, int width)
 // 打印文件列表并为chosen项(index 0)添加被选中样式
 void printFileList(const vector<tinydir_file> &files, int chosen)
 {
-    int left = chosen - config_get_int("aboveLines") >= 0 ? chosen - config_get_int("aboveLines") : 0;                                // 不可越左边界
-    int right = chosen + config_get_int("belowLines") <= files.size() - 1 ? chosen + config_get_int("belowLines") : files.size() - 1; // 不可越右边界
+    int left, right;
+    left = chosen - config_get_int("aboveLines") >= 0 ? chosen - config_get_int("aboveLines") : 0;                                // 不可越左边界
+    right = chosen + config_get_int("belowLines") <= files.size() - 1 ? chosen + config_get_int("belowLines") : files.size() - 1; // 不可越右边界
     // 读取配置确定上限显示
     for (int i = left; i <= right; i++)
     {
