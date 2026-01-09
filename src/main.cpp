@@ -7,13 +7,16 @@
 #include "./head/commands.h"
 using std::cin;
 using std::cout;
+using std::endl;
 using std::string;
 using std::vector;
-using std::endl;
 int chosen = 0;
-int chosenBtn = 1;
+int chosenBtn = 0;
+string current_path;
+tinydir_dir pwd;
 int main()
-{
+{   
+    current_path = getPWD();
     config_init();
     set_raw_mode(true);
     ///*
@@ -22,9 +25,7 @@ int main()
         // 清空
         clear();
         // init
-        tinydir_dir pwd;
-        string current_path = getPWD();
-        if (tinydir_open(&pwd, current_path.c_str()) != 0)// if panic
+        if (tinydir_open(&pwd, current_path.c_str()) != 0) // if panic
         {
             clear();
             cout << "[PANIC] Unable to open current dir";
@@ -34,7 +35,7 @@ int main()
         printInfoPrompt(pwd);
         // 加载文件结构体至vector
         vector<tinydir_file> files;
-        while (pwd.has_next)// 读入
+        while (pwd.has_next) // 读入
         {
             tinydir_file file;
             tinydir_readfile(&pwd, &file);
@@ -46,22 +47,39 @@ int main()
         // 打印文件列表
         printFileList(files, chosen);
         // 打印命令提示
-        
+
         printCmdButton(chosenBtn);
         cout << std::endl;
         // 读取命令
         string cmd = getKeyInput();
         // if line.....
-        if(cmd == "UP" || cmd == "k") 
+        if (cmd == "UP" || cmd == "k")
             chosen = chosen - 1 >= 0 ? chosen - 1 : 0;
-        else if (cmd == "DOWN" || cmd == "j" )
+        else if (cmd == "DOWN" || cmd == "j")
             chosen = chosen + 1 < files.size() ? chosen + 1 : files.size() - 1;
         else if (cmd == "LEFT" || cmd == "h")
             chosenBtn = chosenBtn - 1 >= 0 ? chosenBtn - 1 : 0;
         else if (cmd == "RIGHT" || cmd == "l")
             chosenBtn = chosenBtn + 1 < getAmountOfBtns() ? chosenBtn + 1 : getAmountOfBtns() - 1;
-        else if (cmd == "SPACE" || cmd == "ENTER")// 执行按钮
-            eval(chosenBtn);
+        else if (cmd == "SPACE" || cmd == "ENTER")
+        { // 执行按钮
+            tinydir_file current = files[chosen];
+            bool bFile = !current.is_dir; // true -> 文件 false-> 文件夹
+            switch (chosenBtn)
+            {
+            case 0: // open
+                if (bFile)
+                { // 文件
+                    system((string("nvim ") + string(current.name)).c_str());
+                }
+                else
+                { // 文件夹
+                    current_path = current.path;
+                    
+                }
+                break;
+            }
+        }
     }
     //*/
     return 0;
