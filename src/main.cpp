@@ -28,7 +28,7 @@ int main()
         if (tinydir_open(&pwd, current_path.c_str()) != 0) // if panic
         {
             clear();
-            cout << "[PANIC] Unable to open current dir";
+            cout << "[PANIC] Unable to open current dir\n";
             exit(1);
         }
         // 显示文件信息提示符
@@ -55,7 +55,6 @@ int main()
         // 打印文件列表
         printFileList(files, chosen);
         // 打印命令提示
-
         printCmdButton(chosenBtn);
         cout << std::endl;
         // 读取命令
@@ -73,18 +72,31 @@ int main()
         { // 执行按钮
             tinydir_file current = files[chosen];
             bool bFile = !current.is_dir; // true -> 文件 false-> 文件夹
-            switch (chosenBtn)
+            switch (chosenBtn)            // 按钮逻辑
             {
-            case 0: // open
-                if (bFile)
-                { // 文件
+            case 0:        // open
+                if (bFile) // 文件
+                {
                     system((string("nvim ") + string(current.name)).c_str());
                 }
-                else
-                { // 文件夹
+                else // 文件夹
+                {
                     current_path = current.path;
                     chosen = 0;
                 }
+                break;
+            case 1: // delete
+            {
+                cout << "DELETE " << current.name << "?(y/N):";
+                char i = 'n';
+                i = getchar();
+                if (i == 'Y' || i == 'y')
+                    system((string("rm -rf \'") + string(current.name) + string("\'")).c_str());
+                break;
+            }
+            case 2: // prev
+                current_path = getPREV(current_path);
+                chosen = 0;
                 break;
             }
         }

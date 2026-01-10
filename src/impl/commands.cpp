@@ -159,6 +159,13 @@ string getPWD()
 
     return result;
 }
+// 获取上级目录
+string getPREV(string current_path)
+{
+    string prev = "/";
+    prev = current_path.substr(0, current_path.find_last_of("/"));
+    return prev;
+}
 // 打印信息提示符
 void printInfoPrompt(const tinydir_dir &pwd)
 {

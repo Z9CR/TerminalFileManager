@@ -20,6 +20,8 @@ string intToStringWithZero(int number, int width);
 string getKeyInput();
 // 获取pwd命令的返回值
 string getPWD();
+// 获取上级目录
+string getPREV(string current_path);
 // 清空终端
 void clear();
 // 打印信息提示符
