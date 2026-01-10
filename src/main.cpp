@@ -15,7 +15,7 @@ int chosenBtn = 0;
 string current_path;
 tinydir_dir pwd;
 int main()
-{   
+{
     current_path = getPWD();
     config_init();
     set_raw_mode(true);
@@ -35,11 +35,19 @@ int main()
         printInfoPrompt(pwd);
         // 加载文件结构体至vector
         vector<tinydir_file> files;
-        while (pwd.has_next) // 读入
+        while (pwd.has_next)
         {
             tinydir_file file;
             tinydir_readfile(&pwd, &file);
-            files.push_back(file);
+
+            // 检查是否是 . 或 ..
+            if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
+            {
+                tinydir_next(&pwd); // 跳过，继续下一个
+                continue;           // 不加入数组
+            }
+
+            files.push_back(file); // 加入数组
             tinydir_next(&pwd);
         }
         // 关闭dir释放资源
@@ -75,7 +83,7 @@ int main()
                 else
                 { // 文件夹
                     current_path = current.path;
-                    
+                    chosen = 0;
                 }
                 break;
             }
