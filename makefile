@@ -1,5 +1,5 @@
 TerminalFileManager : main.o commands.o config.o operations.o
-	g++ main.o commands.o config.o operations.o -o ./build/TerminalFileManager
+	g++ main.o commands.o config.o operations.o -o ./build/fileman
 	rm -rf *.o
 
 main.o : ./src/main.cpp
@@ -14,8 +14,8 @@ config.o : ./src/impl/config.cpp
 operations.o : ./src/impl/operations.cpp
 	g++ -c ./src/impl/operations.cpp
 
-clean : # clean .o File
-	rm -rf *.o ./build/TerminalFileManager
-
 run : 
-	./build/TerminalFileManager
+	./build/fileman
+
+clean : # clean .o File
+	rm -rf *.o ./build/fileman

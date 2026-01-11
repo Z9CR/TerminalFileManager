@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <signal.h>
 #include "./head/operations.h"
 #include "./head/config.h"
 #include "./head/thirdpartyLibs/tinydir.h"
@@ -12,13 +13,27 @@ using std::string;
 using std::vector;
 int chosen = 0;
 int chosenBtn = 0;
+string origin_path;
 string current_path;
 tinydir_dir pwd;
+
+void onExit(int sig) {
+    if(current_path == origin_path) exit(0);
+    else
+    {
+        clear();
+        cout <<"请 cd " << current_path << endl;
+        exit(0);
+    }
+}
+
 int main()
 {
+    origin_path = getPWD();
     current_path = getPWD();
     config_init();
     set_raw_mode(true);
+    signal(SIGINT, onExit);
     ///*
     while (true)
     {
@@ -97,6 +112,15 @@ int main()
             case 2: // prev
                 current_path = getPREV(current_path);
                 chosen = 0;
+                break;
+            case 3: // exit
+                if(current_path == origin_path) return 0;
+                else
+                {
+                    clear();
+                    cout <<"请 cd " << current_path << endl;
+                    return 0;
+                }
                 break;
             }
         }

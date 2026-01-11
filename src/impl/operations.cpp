@@ -9,7 +9,8 @@ using std::vector;
 static vector<string> btns = {
     "[Open]",// 0
     "[Del ]",// 1
-    "[Prev]" // 2
+    "[Prev]",// 2
+    "[Exit]" // 3
     // 以下添加按钮
 };
 
