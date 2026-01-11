@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
-#include <filesystem>
+#include <fstream>
+#include <sstream>
 #include <signal.h>
 #include "./head/operations.h"
 #include "./head/config.h"
@@ -11,6 +12,9 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using std::ifstream;
+using std::ofstream;
+using std::fstream;
 int chosen = 0;
 int chosenBtn = 0;
 string origin_path;
@@ -89,7 +93,8 @@ int main()
             bool bFile = !current.is_dir; // true -> 文件 false-> 文件夹
             switch (chosenBtn)            // 按钮逻辑
             {
-            case 0:        // open
+            case 0: // open
+            {    
                 if (bFile) // 文件
                 {
                     openFileWithEditorCheck(current);
@@ -100,9 +105,10 @@ int main()
                     chosen = 0;
                 }
                 break;
+            }
             case 1: // delete
             {
-                cout << "DELETE " << current.name << "?(y/N):";
+                cout << "删除 " << current.name << "?(y/N)> ";
                 char i = 'n';
                 i = getchar();
                 if (i == 'Y' || i == 'y')
@@ -110,10 +116,63 @@ int main()
                 break;
             }
             case 2: // prev
+            {
                 current_path = getPREV(current_path);
                 chosen = 0;
                 break;
-            case 3: // exit
+            }
+            case 3: // new
+            {
+                set_raw_mode(false);
+                char i;
+                cout << endl << "文件 or 目录?(f/d)> ";
+                cin >> i;
+                getchar();
+                if(i == 'f' || i == 'F')
+                {
+                    string filename;
+                    cout << "\r\033[2K"; //清除行
+                    cout << "文件名称> ";
+                    cin >> filename;
+                    // 文件存在, 阻止创建
+                    if(fileExists(filename)) cout << "文件已经存在, 无法创建";
+                    else
+                    {
+                        fstream newFile;
+                        newFile.open(filename.c_str(), std::ios::out);
+                        newFile << "";
+                    }
+                }
+                else if(i == 'd' || i == 'D')
+                {
+                    string dirname;
+                    bool flag = false;
+                    cout << "\r\033[2K"; //清除行
+                    cout << "目录名称> ";
+                    std::getline(cin, dirname);
+                    cout << endl;
+                
+                    // 存在性检测
+                    if(dirExists(current_path + "/" + dirname))
+                    {
+                        cout << "目录已经存在, 无法创建";
+                    }
+                    else// 不存在
+                    {
+                        string tmp = "mkdir \'" + dirname + '\'';
+                        system(tmp.c_str());
+                    }
+                }
+                else 
+                {
+                    cout << "无效输入";
+                    getchar();
+                }
+                set_raw_mode(true);
+                break;
+            }
+            case 4: // exit
+            {
                 if(current_path == origin_path) return 0;
                 else
                 {
@@ -122,6 +181,7 @@ int main()
                     return 0;
                 }
                 break;
+            }
             }
         }
     }

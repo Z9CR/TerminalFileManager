@@ -10,7 +10,8 @@ static vector<string> btns = {
     "[Open]",// 0
     "[Del ]",// 1
     "[Prev]",// 2
-    "[Exit]" // 3
+    "[New ]",// 3
+    "\n[Exit]"// 4
     // 以下添加按钮
 };
 

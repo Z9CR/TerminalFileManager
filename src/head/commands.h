@@ -36,4 +36,8 @@ string timespecToYMDhm(const struct timespec& ts);
 bool command_exists(const string& cmd);
 // 打开文件
 void openFileWithEditorCheck(const tinydir_file& file);
+// 判断文件是否存在
+bool fileExists(const std::string& filename);
+// 判断文件夹是否存在
+bool dirExists(const std::string& path);
 #endif // COMMANDS_H

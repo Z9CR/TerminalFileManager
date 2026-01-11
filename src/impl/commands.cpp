@@ -3,11 +3,13 @@
 #include "../head/config.h"
 #include "../head/commands.h"
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <string>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/stat.h>
 using std::cin;
 using std::cout;
 
@@ -22,6 +24,11 @@ string intToStringWithZero(int number, int width)
 // 打印文件列表并为chosen项(index 0)添加被选中样式
 void printFileList(const vector<tinydir_file> &files, int chosen)
 {
+    if(files.empty())
+    {
+        cout << "无文件------------------------------------\n";
+        return;    
+    }
     int left, right;
     left = chosen - config_get_int("aboveLines") >= 0 ? chosen - config_get_int("aboveLines") : 0;                                // 不可越左边界
     right = chosen + config_get_int("belowLines") <= files.size() - 1 ? chosen + config_get_int("belowLines") : files.size() - 1; // 不可越右边界
@@ -263,4 +270,15 @@ string timespecToYMDhm(const struct timespec &ts)
     strftime(buffer, sizeof(buffer), "%Y.%m.%d - %H:%M", tm_info);
 
     return string(buffer);
+}
+// 判断文件是否存在
+bool fileExists(const std::string& filename)
+{
+    std::ifstream file(filename);
+    return file.good();  // 文件流成功打开则文件存在
+}
+// 判断文件夹是否存在
+bool dirExists(const std::string& path) {
+    struct stat info;
+    return stat(path.c_str(), &info) == 0 && S_ISDIR(info.st_mode);
 }
