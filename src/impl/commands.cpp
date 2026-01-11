@@ -207,6 +207,47 @@ void clear()
     system("clear");
 #endif
 }
+// 检查命令是否存在
+bool command_exists(const string& cmd) {
+    // which检查
+    string check_cmd = "which " + cmd + " > /dev/null 2>&1";
+    return system(check_cmd.c_str()) == 0;
+}
+void openFileWithEditorCheck(const tinydir_file& file) {
+    const string editors[] = {"nvim", "vim", "vi", "nano", "micro"};// 向后push编辑器
+    string currentEditor;
+    // 检查可用的编辑器
+    for (const auto& editor : editors) {
+        if (command_exists(editor)) {
+            currentEditor = editor;
+            break;
+        }
+    }
+    if (currentEditor.empty()) {
+        // 没有找到任何编辑器
+        clear();
+        cout << "\033[1;31m错误：没有找到可用的文本编辑器！\033[0m" << std::endl;
+        cout << "请安装以下编辑器之一：" << std::endl;
+        cout << "*nvim : https://neovim.io/" << std::endl;
+        cout << "*vim  : https://www.vim.org/" << std::endl;
+        cout << "*nano : https://www.nano-editor.org/" << std::endl;
+        cout << "*micro: https://micro-editor.github.io/" << std::endl;
+        cout << "\n按任意键继续..." << std::endl;
+        getchar();
+        return;
+    }
+
+    // 检测到editor
+    // 构建命令
+    string cmd = currentEditor + " \'" + file.name + "\'";
+    
+    // 清屏并打开编辑器
+    int result = system(cmd.c_str());
+    if (result != 0) {
+        cout << "\033[1;31m编辑器异常退出 (code: " << result << ")\033[0m" << std::endl;
+    }
+}
+
 // spec to YYYY:MM:DD - hh:mm
 string timespecToYMDhm(const struct timespec &ts)
 {

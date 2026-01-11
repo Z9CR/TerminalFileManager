@@ -32,4 +32,8 @@ void printFileList(const vector<tinydir_file>& files, int chosen);
 void set_raw_mode(bool enable);
 // spec to YYYY:MM:DD - hh:mm
 string timespecToYMDhm(const struct timespec& ts);
+// 检测命令是否可执行
+bool command_exists(const string& cmd);
+// 打开文件
+void openFileWithEditorCheck(const tinydir_file& file);
 #endif // COMMANDS_H

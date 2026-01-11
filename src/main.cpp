@@ -77,7 +77,7 @@ int main()
             case 0:        // open
                 if (bFile) // 文件
                 {
-                    system((string("nvim ") + string(current.name)).c_str());
+                    openFileWithEditorCheck(current);
                 }
                 else // 文件夹
                 {
