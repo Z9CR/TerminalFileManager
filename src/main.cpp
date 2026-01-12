@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <signal.h>
+#include <filesystem>
 #include "./head/operations.h"
 #include "./head/config.h"
 #include "./head/thirdpartyLibs/tinydir.h"
@@ -10,23 +11,26 @@
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
-using std::vector;
+using std::fstream;
 using std::ifstream;
 using std::ofstream;
-using std::fstream;
+using std::string;
+using std::vector;
+namespace fs = std::filesystem;
 int chosen = 0;
 int chosenBtn = 0;
 string origin_path;
 string current_path;
 tinydir_dir pwd;
 
-void onExit(int sig) {
-    if(current_path == origin_path) exit(0);
+void onExit(int sig)
+{
+    if (current_path == origin_path)
+        exit(0);
     else
     {
         clear();
-        cout <<"请 cd " << current_path << endl;
+        cout << "请 cd " << current_path << endl;
         exit(0);
     }
 }
@@ -59,12 +63,12 @@ int main()
             tinydir_file file;
             tinydir_readfile(&pwd, &file);
 
-            // 检查是否是 . 或 ..
-            if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
-            {
-                tinydir_next(&pwd); // 跳过，继续下一个
-                continue;           // 不加入数组
-            }
+            //// 检查是否是 . 或 ..
+            //if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
+            //{
+            //    tinydir_next(&pwd); // 跳过，继续下一个
+            //    continue;           // 不加入数组
+            //}
 
             files.push_back(file); // 加入数组
             tinydir_next(&pwd);
@@ -94,7 +98,7 @@ int main()
             switch (chosenBtn)            // 按钮逻辑
             {
             case 0: // open
-            {    
+            {
                 if (bFile) // 文件
                 {
                     openFileWithEditorCheck(current);
@@ -111,8 +115,11 @@ int main()
                 cout << "删除 " << current.name << "?(y/N)> ";
                 char i = 'n';
                 i = getchar();
-                if (i == 'Y' || i == 'y')
-                    system((string("rm -rf \'") + string(current.name) + string("\'")).c_str());
+                //cout<<current_path << " " << current.name << " " << (string("rm -rf \'") + current_path + string(current.name) + string("\'")).c_str();
+                //getchar();
+                if (i == 'Y' || i == 'y'){
+                    system((string("rm -rf \'") + current_path + '/' + string(current.name) + string("\'")).c_str());
+                }  
                 break;
             }
             case 2: // prev
@@ -125,45 +132,48 @@ int main()
             {
                 set_raw_mode(false);
                 char i;
-                cout << endl << "文件 or 目录?(f/d)> ";
+                cout << endl
+                     << "文件 or 目录?(f/d)> ";
                 cin >> i;
                 getchar();
-                if(i == 'f' || i == 'F')
+                if (i == 'f' || i == 'F')
                 {
                     string filename;
-                    cout << "\r\033[2K"; //清除行
+                    cout << "\r\033[2K"; // 清除行
                     cout << "文件名称> ";
                     cin >> filename;
+                    string filepath = current_path + '/' + filename;
                     // 文件存在, 阻止创建
-                    if(fileExists(filename)) cout << "文件已经存在, 无法创建";
+                    if (fileExists(filepath))
+                        cout << "目录/文件已经存在, 无法创建";
                     else
                     {
                         fstream newFile;
-                        newFile.open(filename.c_str(), std::ios::out);
+                        newFile.open(filepath.c_str(), std::ios::out);
                         newFile << "";
                     }
                 }
-                else if(i == 'd' || i == 'D')
+                else if (i == 'd' || i == 'D')
                 {
                     string dirname;
                     bool flag = false;
-                    cout << "\r\033[2K"; //清除行
+                    cout << "\r\033[2K"; // 清除行
                     cout << "目录名称> ";
                     std::getline(cin, dirname);
                     cout << endl;
-                
+
                     // 存在性检测
-                    if(dirExists(current_path + "/" + dirname))
+                    fs::path newDir = current_path + "/" + dirname;
+                    if (fs::create_directories(newDir))
                     {
-                        cout << "目录已经存在, 无法创建";
+                        std::cout << "目录创建成功: " << newDir << std::endl;
                     }
-                    else// 不存在
+                    else
                     {
-                        string tmp = "mkdir \'" + dirname + '\'';
-                        system(tmp.c_str());
+                        std::cout << "目录/文件已经存在, 无法创建" << std::endl;
                     }
                 }
-                else 
+                else
                 {
                     cout << "无效输入";
                     getchar();
@@ -173,11 +183,12 @@ int main()
             }
             case 4: // exit
             {
-                if(current_path == origin_path) return 0;
+                if (current_path == origin_path)
+                    return 0;
                 else
                 {
                     clear();
-                    cout <<"请 cd " << current_path << endl;
+                    cout << "请 cd " << current_path << endl;
                     return 0;
                 }
                 break;
