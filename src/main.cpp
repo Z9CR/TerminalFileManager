@@ -195,6 +195,15 @@ int main()
             }
             }
         }
+        else if (cmd == ":") // 命令
+        {
+            string command = "";
+            set_raw_mode(false);
+            cout << ":";
+            std::getline(cin, command);
+            // debug: cout << endl << endl << command; 仅仅用于水github哦
+            set_raw_mode(true);
+        }
     }
     //*/
     return 0;
