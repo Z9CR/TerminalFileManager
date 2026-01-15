@@ -7,6 +7,8 @@
 using std::string;
 using std::vector;
 
+// 在终端中尝试某个命令, 并且返回命令输出
+string tryCommand(string command);
 // 补足前导0并转字符串
 string intToStringWithZero(int number, int width);
 /* 

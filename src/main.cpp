@@ -63,7 +63,7 @@ int main()
             tinydir_file file;
             tinydir_readfile(&pwd, &file);
 
-            //// 检查是否是 . 或 ..
+            //// 检查是否是 . 或 .. # 我不知道为什么会闪退, 所以现取消feature
             //if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
             //{
             //    tinydir_next(&pwd); // 跳过，继续下一个
@@ -201,8 +201,11 @@ int main()
             set_raw_mode(false);
             cout << ":";
             std::getline(cin, command);
-            // debug: cout << endl << endl << command; 仅仅用于水github哦
+            // debug: //cout << endl << endl << command;
+            string out = tryCommand(command);
             set_raw_mode(true);
+            cout << out;
+            getKeyInput();
         }
     }
     //*/

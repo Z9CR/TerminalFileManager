@@ -13,6 +13,25 @@
 using std::cin;
 using std::cout;
 
+// 在终端中尝试某个命令, 并且返回命令输出
+string tryCommand(string command)
+{
+    char buf[8192];
+    string result = "";
+    FILE* pipe = popen(command.c_str(), "r");
+    if(pipe == nullptr) {
+        clear();
+        cout<<"[Panic!]Unable to open";
+        exit(1);
+    }
+    while(true)
+    {
+        if(fgets(buf, sizeof(buf), pipe) == nullptr) break;
+        else result += buf;
+    }
+    pclose(pipe);
+    return result;
+}
 // 补足前导0并转字符串
 string intToStringWithZero(int number, int width)
 {
@@ -149,8 +168,7 @@ string getPWD()
     }
     pclose(pipe);
     // 去除末尾的换行符
-    std::string result(buf);
-
+    string result(buf);
     // 检查并删除末尾的 \n 和 \r
     while (
         !result.empty() &&
@@ -158,7 +176,6 @@ string getPWD()
     {
         result.pop_back();
     }
-
     return result;
 }
 // 获取上级目录
