@@ -1,4 +1,5 @@
 #include "../head/operations.h"
+#include "../head/config.h"
 #include "../head/thirdpartyLibs/tinydir.h"
 #include <iostream>
 #include <vector>
@@ -25,7 +26,7 @@ void printCmdButton(int chosenBtn) {
     for(int i = 0;i < btns.size();i++) {
         if(i == chosenBtn) {
             // 如果是被选中的, 添加样式
-            output += "\033[37;45m" + btns.at(i) + "\033[0m  ";
+            output +=  config_get("chosenButtonColor") + btns.at(i) + "\033[0m  ";
         }
         else {
             output += btns.at(i) + "  ";

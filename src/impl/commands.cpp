@@ -88,7 +88,7 @@ void printFileList(const vector<tinydir_file> &files, int chosen)
         output = output + file.name ;//+ (string(file.extension) == "." ? "/" : string(file.extension));
         // 最后为被选中项添加样式并换行
         if (i == chosen)
-            output = "\033[1;30;45m" + output + "\033[0m\n";
+            output = config_get("chosenFileColor") + output + "\033[0m\n";
         else
             output = output + "\n";
         cout << output;
@@ -189,15 +189,15 @@ string getPREV(string current_path)
 void printInfoPrompt(const tinydir_dir &pwd)
 {
     // 打印蓝底黑字路径
-    cout << "\033[30;44mPath: " + string(pwd.path) + "\033[0m\n";
+    cout << config_get("PWDBlankColor")+"Path: "+string(pwd.path)+"\033[0m\n";
     // 类型提示符
-    cout << "[\033[4;1;35mT\033[0m\033[1;35mype\033[0m]" << "  ";
+    cout << "["+config_get("infoPromptFirstWord")+"T"+"\033[0m"+config_get("infoPromptOtherWords")+"ype\033[0m]" << "  ";
     // 类型 [Type] or [Dir ], 6chars
-    cout << "[\033[4;1;35mS\033[0m\033[1;35mize\033[0m]" << "  ";
+    cout << "["+config_get("infoPromptFirstWord")+"S"+"\033[0m"+config_get("infoPromptOtherWords")+"ize\033[0m]" << "  ";
     // 大小 xxxxxxM, 7chars
-    cout << "[\033[4;1;35mL\033[0m\033[1;35mastModifiedDate\033[0m]" << "  ";
+    cout << "["+config_get("infoPromptFirstWord")+"L"+"\033[0m"+config_get("infoPromptOtherWords")+"astModifiedDate\033[0m]" << "  ";
     // 日期 yyyy:mm:dd, 10chars
-    cout << "[\033[4;1;35mN\033[0m\033[1;35mame\033[0m]" << '\n';
+    cout << "["+config_get("infoPromptFirstWord")+"N"+"\033[0m"+config_get("infoPromptOtherWords")+"ame\033[0m]" << '\n';
     // 名称 asgsaghbasytgfuyhsygysda, unk chars
 }
 // 设置原始终端模式

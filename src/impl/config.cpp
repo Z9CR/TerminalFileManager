@@ -7,6 +7,7 @@ using std::map;
 using std::ofstream;
 using std::cout;
 using std::string;
+using std::endl;
 
 static map<string, string> settings;
 static string config_path;
@@ -21,8 +22,13 @@ void config_init()
         ofstream properties;
         properties.open(config_path);
         // 写入默认配置
-        properties << "aboveLines=3" << std::endl;
-        properties << "belowLines=3" << std::endl;
+        properties << "aboveLines=3" << endl;
+        properties << "belowLines=3" << endl;
+        properties << "PWDBlankColor=\033[30;44m" << endl;
+        properties << "infoPromptFirstWord=\033[4;1;35m" << endl;
+        properties << "infoPromptOtherWords=\033[1;35m" << endl;
+        properties << "chosenFileColor=\033[1;30;45m" << endl;
+        properties << "chosenButtonColor=\033[37;45m" << endl;
         // 关闭+释放资源
         properties.close();
     }
