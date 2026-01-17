@@ -1,4 +1,5 @@
 #include <string>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -62,17 +63,22 @@ int main()
         {
             tinydir_file file;
             tinydir_readfile(&pwd, &file);
-
             //// 检查是否是 . 或 .. # 我不知道为什么会闪退, 所以现取消feature
-            //if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
+            // if (strcmp(file.name, ".") == 0 || strcmp(file.name, "..") == 0)
             //{
-            //    tinydir_next(&pwd); // 跳过，继续下一个
-            //    continue;           // 不加入数组
-            //}
-
+            //     tinydir_next(&pwd); // 跳过，继续下一个
+            //     continue;           // 不加入数组
+            // }
             files.push_back(file); // 加入数组
             tinydir_next(&pwd);
         }
+        std::sort(files.begin(), files.end(),
+                  [](const tinydir_file &a, const tinydir_file &b)
+                  {
+                      return strcasecmp(a.name, b.name) < 0; // 不区分大小写
+                      // 或者用区分大小写：
+                      // return strcmp(a.name, b.name) < 0;
+                  });
         // 关闭dir释放资源
         tinydir_close(&pwd);
         // 打印文件列表
@@ -115,11 +121,12 @@ int main()
                 cout << "删除 " << current.name << "?(y/N)> ";
                 char i = 'n';
                 i = getchar();
-                //cout<<current_path << " " << current.name << " " << (string("rm -rf \'") + current_path + string(current.name) + string("\'")).c_str();
-                //getchar();
-                if (i == 'Y' || i == 'y'){
+                // cout<<current_path << " " << current.name << " " << (string("rm -rf \'") + current_path + string(current.name) + string("\'")).c_str();
+                // getchar();
+                if (i == 'Y' || i == 'y')
+                {
                     system((string("rm -rf \'") + current_path + '/' + string(current.name) + string("\'")).c_str());
-                }  
+                }
                 break;
             }
             case 2: // prev
@@ -181,7 +188,18 @@ int main()
                 set_raw_mode(true);
                 break;
             }
-            case 4: // exit
+            case 4: // rename
+            {
+                cout << "新名称:";
+                set_raw_mode(false);
+                string input;
+                std::getline(cin, input);
+                // cout<<input;
+                fs::rename(current.name, input);
+                set_raw_mode(true);
+                break;
+            }
+            case 5: // exit
             {
                 if (current_path == origin_path)
                     return 0;
