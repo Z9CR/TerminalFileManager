@@ -195,7 +195,15 @@ int main()
                 string input;
                 std::getline(cin, input);
                 // cout<<input;
-                fs::rename(current.name, input);
+                try
+                {
+                    fs::rename(current.name, input);
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                    getKeyInput();
+                }
                 set_raw_mode(true);
                 break;
             }
